@@ -1,4 +1,4 @@
-CC = gcc
+CC = cgcc
 CFLAGS = -Wall -O2 -g
 
 unlzx:	unlzx.c
