@@ -629,7 +629,8 @@ int extract_normal(FILE * in_file)
 /* check if we have enough data and read some if not */
 		if (source >= source_end) {	/* have we exhausted the current read buffer? */
 		    temp = read_buffer;
-		    if (count = temp - source + 16384) {
+		    count = temp - source + 16384;
+		    if (count) {
 			do {	/* copy the remaining overrun to the start of the buffer */
 			    *temp++ = *source++;
 			} while (--count);
@@ -665,7 +666,8 @@ int extract_normal(FILE * in_file)
 
 /* unpack some data */
 		if (destination >= decrunch_buffer + 258 + 65536) {
-		    if (count = destination - decrunch_buffer - 65536) {
+		    count = destination - decrunch_buffer - 65536;
+		    if (count) {
 			temp = (destination = decrunch_buffer) + 65536;
 			do {	/* copy the overrun to the start of the buffer */
 			    *destination++ = *temp++;
@@ -835,13 +837,16 @@ int extract_archive(FILE * in_file)
 					pack_mode = archive_header[11];	/* pack mode */
 					crc = (archive_header[25] << 24) + (archive_header[24] << 16) + (archive_header[23] << 8) + archive_header[22];	/* data crc */
 
-					if (node = (struct filename_node *) malloc(sizeof(struct filename_node))) {	/* allocate a filename node */
+					/* allocate a filename node */
+					node = (struct filename_node *) malloc(sizeof(struct filename_node));
+					if (node) {
 					    *filename_next = node;	/* add this node to the list */
 					    filename_next = &(node->next);
 					    node->next = 0;
 					    node->length = unpack_size;
 					    node->crc = crc;
-					    for (temp = 0; node->filename[temp] = header_filename[temp]; temp++);
+
+					    snprintf(node->filename, sizeof node->filename, "%s", header_filename);
 
 					    if (pack_size) {
 						switch (pack_mode) {
@@ -865,7 +870,7 @@ int extract_archive(FILE * in_file)
 						    break;	/* a read error occured */
 
 						temp_node = filename_list;	/* free the list now */
-						while (node = temp_node) {
+						while ((node = temp_node)) {
 						    temp_node = node->next;
 						    free(node);
 						}
@@ -899,9 +904,9 @@ int extract_archive(FILE * in_file)
 	    perror("FRead(Archive_Header)");
     } while (!abort);
 
-/* free the filename list in case an error occured */
+    /* free the filename list in case an error occured */
     temp_node = filename_list;
-    while (node = temp_node) {
+    while ((node = temp_node)) {
 	temp_node = node->next;
 	free(node);
     }
