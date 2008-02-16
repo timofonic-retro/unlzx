@@ -1,0 +1,19 @@
+Short:        Unlzx - decompresses LZX archives on multiple platforms
+Author:       emeusel@cs.uni-magdeburg.de (Erik Meusel) (v1.1, 03.04.01)
+Uploader:     dt14 uow edu au (David Tritscher)
+Type:         misc/unix
+Version:      1.1
+Replaces:     misc/unix/unlzx.c.Z
+Requires:     ANSI C-Compiler
+Architecture: generic
+
+ * made unlzx able to read from stdin instead of files to support pipeing
+
+   reason: just typeing:
+   > lzx -r a PIPE:backup.lzx
+   in an Amiga shell and
+   > copy PIPE:backup.lzx SER:
+   in another Amiga shell and
+   > cat < /dev/ttyS0 | unlzx -x -c
+   in the UNIX bash on the other side should make a real small but nice 
+   backup system via serial cable. :o)
