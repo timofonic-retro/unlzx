@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 /* ---------------------------------------------------------------------- */
 
@@ -1076,7 +1077,7 @@ int main(int argc, char **argv)
     extern int optind;
 
     mode = 1;			/* default mode is extract */
-    while ((option = getopt(argc, argv, "vxc")) != EOF) {
+    while ((option = getopt(argc, argv, "vxc")) != -1) {
 	switch (option) {
 	case 'v':		/* (v)iew archive */
 	    {
